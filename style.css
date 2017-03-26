@@ -1,0 +1,11 @@
+div.Avatar{
+    padding: 2em;
+    text-align: center;
+}
+div.Userinfo{
+    text-align: center;
+}
+h3{
+    text-align: center;
+    color: gray;
+}

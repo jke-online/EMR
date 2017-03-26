@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EMR</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    </head>
+    <body>
+        <!-- Top navegation bar - Starts -->
+        <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Pacientes<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-toggle="modal" data-target="#NewPatient">Nuevo</a></li>
+            <li><a href="pacientes">Editar</a></li>
+          </ul>
+        </li>
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>Citas<span class="badge">0<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><p>Hoy</p></li>
+              {% for Citas in Citas: %}
+              <p>{{ Citas.Hora }}</p>
+              <p>{{ Citas.Paciente }}</p>
+              {% endfor %}
+              <br>
+            <form method="post" action="/appointment">
+                <label for="sel2">Agendar</label>
+                <label for="bday">Fecha:</label>
+                <input type="date" class="form-control" name="fecha" placeholder="0000-00-00">
+                <label for="hora">Hora</label>
+                <input type="text" class="form-control" name="hora" placeholder="00:00">
+                <label for="citapaciente">Paciente</label>
+                <select class="form-control" id="appointmentp" name="paciente">
+                    {% for patientdrop in patientdrop: %}
+                    <option value="{{patientdrop.Name}}">{{ patientdrop.Name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Guardar" class="btn btn-primary">
+            </form>
+          </ul>
+        </li>
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>Calendario<span class="badge">0<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Mostrar</a></li>
+            <li><a href="#">Preferencias</a></li>
+            <li><a href="#">Limpiar</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search for...">
+        </div>
+        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="#"><span class="glyphicon glyphicon-off" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Salir"></span></a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+        <!-- Top navegation bar - Ends -->
+
+        
+<div class="container">
+        <table class="table table-hover">
+            <th>Citas</th>
+            <button  type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#NewPatient">Nuevo</button>
+                {% for Citas in Citas: %}
+                <tr>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle btn-block" style="width:100%" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                             {{ Citas.Paciente }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <p>Hora</p>
+                                    <p>{{ Citas.Hora }}</p>
+                                    <p>Paciente</p>
+                                    <p>{{ Citas.paciente }}</p>
+                                    <p>Telefono</p>
+                                    <p>{{ patientdrop.Phone }}</p>
+                                    <p>Correo Electronico</p>
+                                    <p>{{ patientdrop.Mail }}</p>
+                                    <form action="{{ url_for('deletepatient') }}" method=post class=delete-movie>
+                                        <input type=hidden value="{{ patientdrop.Id }}"name="patient_to_delete"></input>
+<input type=submit value="Eliminar"></input>
+                                    </form>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </td>
+                {% endfor %}
+                </tr>
+        </table>
+      </div>
+        
+        <!-- Modal New Patient-->
+<div id="NewPatient" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Nuevo paciente</h4>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/newpatienth">
+           <label for="sel2">Para paciente:</label>
+                <label for="name">Nombre</label>
+                <input type="text" class="form-control" name="namei" placeholder="Nombre Apellido Apellido">
+                <label for="tutor">Tutor - si aplica</label>
+                <input type="text" class="form-control" name="tutori" placeholder="Nombre Apellido Apellido">
+                <label for="bday">Fecha de nacimiento</label>
+                <input type="date" class="form-control" name="bdayi" placeholder="0000-00-00">
+                <label for="sex">Sexo</label>
+                <select class="form-control" name="sexi">
+                    <option>Masculino</option>
+                    <option>Femenino</option>
+                </select>
+                <br>
+                <label for="gender">Genero</label>
+                <select class="form-control" name="generoi">
+                    <option>Cisgenero</option>
+                    <option>No-cisgenero</option>
+                </select>
+                <br>
+                <label for="phone">Telefono</label>
+                <input type="tel" class="form-control" name="phonei">
+                <label for="phone">Correo Electronico</label>
+                <input type="email" class="form-control" name="maili" placeholder="correo@dominio.com">
+                <label for="sel1">Estado academico</label>
+                <select class="form-control" name="academi">
+                    <option>Universidad</option>
+                    <option>Preparatoria</option>
+                    <option>Secundaria</option>
+                    <option>Primaria</option>
+                    <option>Sin grado academico con lectoescritura</option>
+                    <option>Sin grado academico sin lectoescritura</option>
+                </select>
+                <label for="why">Motivo de consulta</label>
+                <textarea class="form-control" rows="5" name="motivoi"></textarea>
+                <label for="symptoms">Sintomatologia</label>
+                <textarea class="form-control" rows="5" name="sintomasi"></textarea>
+            </div>
+            <input type="submit" value="Guardar" class="btn btn-primary">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>          
+        
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </body>
+
+</html>
